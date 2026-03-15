@@ -119,13 +119,14 @@ void set_layer_color(int layer) {
       .s = pgm_read_byte(&ledmap[layer][i][1]),
       .v = pgm_read_byte(&ledmap[layer][i][2]),
     };
-    if (!hsv.h && !hsv.s && !hsv.v) {
-      rgb = webhid_leds[i];
-      if (rgb.r || rgb.g || rgb.b) {
-        continue;
-      }
+    rgb = webhid_leds[i];
+    if (rgb.r || rgb.g || rgb.b) {
+      rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
+      continue;
+    }
 
-      rgb_matrix_set_color( i, 0, 0, 0 );
+    if (!hsv.h && !hsv.s && !hsv.v) {
+      rgb_matrix_set_color(i, 0, 0, 0);
     } else {
       rgb = hsv_to_rgb_with_value(hsv);
       rgb_matrix_set_color(i, rgb.r, rgb.g, rgb.b);
